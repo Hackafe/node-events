@@ -10,8 +10,15 @@
     "hackafe",
     "events"
   ],
-  "author": "Geno Roupsky",
-  "license": "ISC",
+  "author": {
+    "name": "Geno Roupsky",
+    "url": "https://github.com/groupsky"
+  },
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hackafe/node-events.git"
+  },
   "browser": {
     "request": "browser-request"
   },
