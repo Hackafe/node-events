@@ -12,10 +12,12 @@
   ],
   "author": "Geno Roupsky",
   "license": "ISC",
+  "browser": {
+    "request": "browser-request"
+  },
   "dependencies": {
+    "browser-request": "^0.3.3",
     "debug": "^2.2.0",
-    "hackafe-trello-config": "*",
-    "promise": "^7.1.1",
-    "simple-get": "^2.3.0"
+    "request": "^2.75.0"
   }
 }

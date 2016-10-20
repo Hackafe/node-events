@@ -1,27 +1,34 @@
 var debug = require('debug')('hackafe-events');
 var config = require('./config');
-var Promise = require('promise');
-var get = require('simple-get');
+var request = require('request');
 
 var FACEBOOK_EVENT_PATTERN = /((https?:)?\/\/(www.)?facebook\.com\/events\/\d+)/i;
 var FORUM_THREAD_PATTERN = /((https?:)?\/\/frm\.hackafe\.org\/t\/[-a-zA-Z0-9]+\/\d+)/i;
 
 var labelCache = {};
 
-module.exports = function (opts, cb) {
+module.exports = function list(opts, cb) {
     if (typeof opts === 'function') {
         cb = opts;
         opts = {};
     }
 
-    return getBoardVisibleCards(config.boardId)
+    var deferred = getBoardVisibleCards(config.boardId)
         .then(function (cards) {
             return Promise.all(cards.map(transform));
         })
         .then(function (events) {
             return events.filter(upcomming);
-        })
-        .nodeify(cb);
+        });
+
+    if (typeof cb === 'function') {
+        deferred.then(function (events) {
+            cb(null, events);
+        }, function (err) {
+            cb(err);
+        });
+    }
+    return deferred;
 };
 
 function tfetch(opts) {
@@ -30,7 +37,7 @@ function tfetch(opts) {
     opts.json = true;
     return new Promise(function (resolve, reject) {
         debug('fetching %s', opts.url);
-        get.concat(opts, function (err, res, data) {
+        request(opts, function (err, res, data) {
             if (err) return reject(err);
             debug('fetched %s', opts.url);
             resolve(data);
